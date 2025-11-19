@@ -8,7 +8,6 @@ class EstacionController {
         $this->model = new EstacionModel();
     }
     
-    // Vista landing
     public function landing() {
         $this->render('landing', [
             'titulo' => 'App Estación Meteorológica',
@@ -16,7 +15,6 @@ class EstacionController {
         ]);
     }
     
-    // Vista panel de estaciones
     public function panel() {
         $this->render('panel', [
             'titulo' => 'Panel de Estaciones',
@@ -25,8 +23,14 @@ class EstacionController {
         ]);
     }
     
-    // Vista detalle de estación
     public function detalle($chipid) {
+        if (!SessionManager::estaLogueado()) {
+            SessionManager::guardarDestino(BASE_URL . 'detalle/' . $chipid);
+            
+            header('Location: ' . BASE_URL . 'login');
+            exit;
+        }
+        
         $this->render('detalle', [
             'titulo' => 'Detalles',
             'chipid' => $chipid,
@@ -35,7 +39,6 @@ class EstacionController {
         ]);
     }
     
-    // Motor de plantillas simple
     private function render($vista, $datos = []) {
         extract($datos);
         include dirname(__DIR__) . "/templates/header.php";
